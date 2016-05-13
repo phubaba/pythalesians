@@ -21,6 +21,8 @@ Provides a common wrapper for all these data sources.
 """
 
 import copy
+import math
+import numpy
 
 from pythalesians.util.configmanager import ConfigManager
 from pythalesians.util.loggermanager import LoggerManager
@@ -401,26 +403,29 @@ class LightTimeSeriesFactory(object):
         """
 
         # daily data does not include ticker in the key, as multiple tickers in the same file
-
-        if Constants().time_series_factory_thread_no['other'] == 1:
+        other_process_size = float(Constants().time_series_factory_thread_no['other'])
+        if other_process_size <= 1:
             data_frame_agg = loader.load_ticker(time_series_request)
         else:
             time_series_request_list = []
 
-            group_size = int(len(time_series_request.tickers) / Constants().time_series_factory_thread_no['other'] - 1)
-
-            if group_size < 0: group_size = 1
+            num_tickers = len(time_series_request.tickers)
+            group_size = math.floor(float(num_tickers) / other_process_size)
+            if group_size == 0: group_size = 1
+            ticker_groups = numpy.array_split(numpy.arange(num_tickers), other_process_size)
 
             # split up tickers into groups related to number of threads to call
-            for i in range(0, len(time_series_request.tickers), group_size):
-                time_series_request_single = copy.copy(time_series_request)
-                time_series_request_single.tickers = time_series_request.tickers[i:i + group_size]
+            for ticker_group in ticker_groups:
+                if len(ticker_group) > 0:
+                    start, end = ticker_group[0], ticker_group[-1] + 1
+                    time_series_request_single = copy.copy(time_series_request)
+                    time_series_request_single.tickers = time_series_request.tickers[start:end]
 
-                if hasattr(time_series_request, 'vendor_tickers'):
-                    time_series_request_single.vendor_tickers = \
-                        time_series_request.vendor_tickers[i:i + group_size]
+                    if hasattr(time_series_request, 'vendor_tickers'):
+                        time_series_request_single.vendor_tickers = \
+                            time_series_request.vendor_tickers[start:end]
 
-                time_series_request_list.append(time_series_request_single)
+                    time_series_request_list.append(time_series_request_single)
 
             data_frame_agg = self.fetch_group_time_series(time_series_request_list)
 
