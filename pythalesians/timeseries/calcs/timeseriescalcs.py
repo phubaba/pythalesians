@@ -343,7 +343,7 @@ class TimeSeriesCalcs:
         DataFrame
         """
 
-        return pandas.rolling_std(data_frame, periods) * math.sqrt(obs_in_year)
+        return data_frame.rolling(window=periods, center=False).std() * math.sqrt(obs_in_year)
 
     def rolling_mean(self, data_frame, periods):
         return self.rolling_average(data_frame, periods)

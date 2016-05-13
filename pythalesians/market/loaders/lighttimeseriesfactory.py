@@ -30,7 +30,7 @@ from pythalesians.market.requests.timeseriesrequest import TimeSeriesRequest
 from pythalesians.timeseries.calcs.timeseriesfilter import TimeSeriesFilter
 from pythalesians.market.loaders.timeseriesio import TimeSeriesIO
 
-class LightTimeSeriesFactory:
+class LightTimeSeriesFactory(object):
     _time_series_cache = {} # shared across all instances of object!
 
     def __init__(self):
@@ -409,7 +409,7 @@ class LightTimeSeriesFactory:
 
             group_size = int(len(time_series_request.tickers) / Constants().time_series_factory_thread_no['other'] - 1)
 
-            if group_size == 0: group_size = 1
+            if group_size < 0: group_size = 1
 
             # split up tickers into groups related to number of threads to call
             for i in range(0, len(time_series_request.tickers), group_size):

@@ -24,7 +24,7 @@ import copy
 
 from pythalesians.util.configmanager import ConfigManager
 
-class LoaderTemplate:
+class LoaderTemplate(object):
     def __init__(self):
         self.config = None
 

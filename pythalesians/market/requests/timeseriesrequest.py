@@ -3,7 +3,7 @@ __author__ = 'saeedamen'
 from pythalesians.util.loggermanager import LoggerManager
 from datetime import datetime
 
-class TimeSeriesRequest:
+class TimeSeriesRequest(object):
 
     # properties
     #

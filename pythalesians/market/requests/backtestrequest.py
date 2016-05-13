@@ -7,7 +7,7 @@ from pythalesians.timeseries.techind.techparams import TechParams
 class BacktestRequest(TimeSeriesRequest):
 
     def __init__(self):
-        super(TimeSeriesRequest, self).__init__()
+        super(BacktestRequest, self).__init__()
         self.logger = LoggerManager().getLogger(__name__)
 
         self.__signal_name = None

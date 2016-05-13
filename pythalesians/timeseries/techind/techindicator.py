@@ -55,7 +55,7 @@ class TechIndicator:
 
                 narray = numpy.where(data_frame_early > self._techind, 1, -1)
             else:
-                self._techind = pandas.rolling_mean(data_frame, tech_params.sma_period)
+                self._techind = data_frame.rolling(window=tech_params.sma_period, center=False).mean()
 
                 narray = numpy.where(data_frame > self._techind, 1, -1)
 

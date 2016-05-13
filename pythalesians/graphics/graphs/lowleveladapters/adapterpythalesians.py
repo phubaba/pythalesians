@@ -263,8 +263,10 @@ class AdapterPyThalesians(AdapterTemplate):
         matplotlib.rcdefaults()
 
         # first search PyThalesians styles, then try matplotlib
-        try: plt.style.use(Constants().plotfactory_pythalesians_style_sheet[gp.style_sheet])
-        except: plt.style.use(gp.style_sheet)
+        try:
+            plt.style.use(Constants().plotfactory_pythalesians_style_sheet[gp.style_sheet])
+        except:
+            plt.style.use("classic") #note: used to be (gp.style_sheet) but this would fail
 
         # adjust font size for scale factor
         matplotlib.rcParams.update({'font.size': matplotlib.rcParams['font.size'] * gp.scale_factor})

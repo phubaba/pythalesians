@@ -18,7 +18,7 @@ Class for reading in data from Quandl into PyThalesians library
 
 """
 
-import Quandl
+import quandl
 
 from pythalesians.util.loggermanager import LoggerManager
 from pythalesians.market.loaders.lowlevel.loadertemplate import LoaderTemplate
@@ -72,11 +72,12 @@ class LoaderQuandl(LoaderTemplate):
 
         while(trials < 5):
             try:
-                data_frame = Quandl.get(time_series_request.tickers, authtoken=Constants().quandl_api_key, trim_start=time_series_request.start_date,
+                data_frame = quandl.get(time_series_request.tickers, authtoken=Constants().quandl_api_key, trim_start=time_series_request.start_date,
                             trim_end=time_series_request.finish_date)
 
                 break
-            except:
+            except Exception, e:
+                print e
                 trials = trials + 1
                 self.logger.info("Attempting... " + str(trials) + " request to download from Quandl")
 
